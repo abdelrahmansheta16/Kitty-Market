@@ -2,6 +2,7 @@ import "../styles/globals.css";
 import "../styles/NFTFactory.css"
 import "../styles/animations.css"
 import 'bootstrap/dist/css/bootstrap.css'
+import Web3 from 'web3';
 import Head from "next/head";
 
 import "@rainbow-me/rainbowkit/styles.css";
@@ -12,8 +13,9 @@ import { WagmiConfig, createConfig, configureChains, mainnet, sepolia } from 'wa
 
 import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { publicProvider } from 'wagmi/providers/public'
-console.log(__dirname)
+import { useEffect, useState } from "react";
 require('dotenv').config()
+
 
 const { chains, publicClient } = configureChains(
 	[mainnet, sepolia],
@@ -37,8 +39,43 @@ const wagmiConfig = createConfig({
 
 export { WagmiConfig, RainbowKitProvider };
 function MyApp({ Component, pageProps }) {
+
+	const [account, setAccount] = useState()
+	const [mounted, setMounted] = useState(false);
+
+	const loadBlockchainData = async () => {
+		if (typeof window.ethereum !== 'undefined') {
+			const web3 = new Web3(window.ethereum)
+
+			const accounts = await web3.eth.getAccounts()
+
+			if (accounts.length > 0) {
+				setAccount(accounts[0])
+			}
+
+
+			// Event listeners...
+			window.ethereum.on('accountsChanged', function (accounts) {
+				setAccount(accounts[0])
+				window.location.reload();
+			})
+
+			window.ethereum.on('chainChanged', (chainId) => {
+				window.location.reload();
+			})
+		}
+	}
+
+	useEffect(() => {
+		loadBlockchainData()
+	}, [account])
+
+	useEffect(() => {
+		setMounted(true);
+	}, []);
+
 	return (
-		<WagmiConfig config={wagmiConfig}>
+		mounted ? <WagmiConfig config={wagmiConfig}>
 			<RainbowKitProvider
 				modalSize="compact"
 				initialChain={process.env.NEXT_PUBLIC_DEFAULT_CHAIN}
@@ -51,7 +88,7 @@ function MyApp({ Component, pageProps }) {
 					<Component {...pageProps} />
 				</MainLayout>
 			</RainbowKitProvider>
-		</WagmiConfig>
+		</WagmiConfig> : <div></div>
 	);
 }
 

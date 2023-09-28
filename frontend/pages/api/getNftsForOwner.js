@@ -26,7 +26,6 @@ export default async function handler(req, res) {
 		const formattedNfts = nfts.ownedNfts.map((nft) => {
 			const { contract, title, tokenType, tokenId, description, media } =
 				nft;
-			console.log(nft.media);
 			return {
 				contract: contract.address,
 				symbol: contract.symbol,

@@ -2,12 +2,9 @@ import React from 'react'
 import { colors } from '../utils/colors.js';
 
 export const Cat = (props) => {
-    console.log(props)
-    const data = props.dna?catProp(props.dna):props.data;
+    const data = props.dna ? catProp(props.dna) : props.data;
     function catProp(dna) {
-        console.log(dna)
-        const DNA = dna.length == 14?"0"+dna:dna
-        console.log(DNA)
+        const DNA = dna.length == 14 ? "0" + dna : dna
         const cat = {};
         cat.headBodyColor = parseInt(DNA.slice(0, 2))
         cat.bodyColor = parseInt(DNA.slice(2, 4))
@@ -18,11 +15,9 @@ export const Cat = (props) => {
         cat.middleColor = parseInt(DNA.slice(10, 12))
         cat.sidesColor = parseInt(DNA.slice(12, 14))
         cat.animation = parseInt(DNA.slice(14, 15))
-        console.log(cat)
         return cat
     }
-    console.log(data)
-    const animation = parseInt(data.animation != undefined?data.animation: 0)
+    const animation = parseInt(data.animation != undefined ? data.animation : 0)
     function eyeVariation(num) {
         let eye = {};
         switch (num) {
@@ -51,7 +46,6 @@ export const Cat = (props) => {
                 eye = { 'border': '15px solid', 'backgroundColor': `#${colors[data.eyesColor]}` }
                 break
         }
-        console.log(eye)
         return eye;
     }
     function decorationVariation(num) {

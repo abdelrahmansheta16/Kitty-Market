@@ -24,13 +24,8 @@ export default function NFTPage(props) {
 
     async function getNFTData(tokenId) {
         const NFT = JSON.parse(decodeURIComponent(nft));
-        console.log(NFT.contract);
-        console.log(NFT.tokenId);
         const owner = await alchemy.nft.getOwnersForNft(NFT.contract.toString(), NFT.tokenId.toString());
-        console.log(owner)
-        // updateData(item);
         updateDataFetched(true);
-        console.log("address", addr)
         updateCurrAddress(addr);
     }
 

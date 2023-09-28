@@ -23,22 +23,16 @@ export default function NFTPage(props) {
     }
     async function getNFTData() {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
-        console.log(provider)
         const signer = provider.getSigner();
         const addr = await signer.getAddress();
         //Pull the deployed contract instance
         let contract = new ethers.Contract(contractAddress, MarketplaceJSON.abi, signer)
-        console.log(tokenId)
         // //create an NFT Token
         var tokenURI = await contract.tokenURI(parseInt(tokenId));
-        console.log(tokenURI.toString())
-        console.log(contract)
         const listedToken = await contract.getListedTokenForId(tokenId);
         tokenURI = GetIpfsUrlFromPinata(tokenURI);
         let meta = await axios.get(tokenURI);
         meta = meta.data;
-        console.log(listedToken);
-        console.log(meta);
         const date = new Date(meta.birthTime);
         const formattedDate = date.toLocaleDateString();
         let item = {
@@ -51,9 +45,7 @@ export default function NFTPage(props) {
             birth: formattedDate,
             dna: meta.dna.toString(),
         }
-        console.log(item);
         updateData(item);
-        console.log("address", addr)
         updateCurrAddress(addr);
     }
 
@@ -66,7 +58,6 @@ export default function NFTPage(props) {
             //Pull the deployed contract instance
             let contract = new ethers.Contract(contractAddress, MarketplaceJSON.abi, signer);
             const _price = getPriceInETher(data.price)
-            console.log(_price)
             const salePrice = ethers.utils.parseUnits(_price, 'ether')
             updateMessage("Buying the NFT... Please Wait (Upto 5 mins)")
             //run the executeSale function

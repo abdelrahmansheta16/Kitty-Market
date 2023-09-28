@@ -8,13 +8,11 @@ export default async function handler(req, res) {
     res.status(405).send({ message: "Only POST requests allowed" });
     return;
   }
-  console.log(chain);
 
   try {
     const signer = provider.getSigner();
     let contract = new ethers.Contract(address, Marketplace.abi, signer)
     const nfts = await contract.getAllNFTs()
-    console.log(nfts)
     const formattedNfts = nfts.nfts.map((nft) => {
       const { contract, title, tokenType, tokenId, description, media } = nft;
 

@@ -87,21 +87,14 @@ export default function kfactory() {
 
         setError('');
         setIsLoading(true)
-        console.log(jsonObject.generation)
         const dna = getDna()
         const provider = new ethers.providers.Web3Provider(window.ethereum);
-        console.log(window.ethereum)
         const signer = provider.getSigner();
         let contract = new ethers.Contract(contractAddress, Marketplace.abi, signer)
         let listingPrice = await contract.getListPrice()
-        console.log((parseInt(listingPrice.toString()) / Math.pow(10, 18)))
         listingPrice = parseInt(listingPrice.toString()) / Math.pow(10, 18)
-        console.log(listingPrice)
-        console.log((listingPrice / jsonObject.generation).toString())
-        // console.log(jsonObject.generation / 10)
         const listPrice = ethers.utils.parseUnits((listingPrice / jsonObject.generation).toFixed(6), 'ether')
-        //make metadata
-        console.log(listPrice.toString())
+            //make metadata
         const metadata = new Object();
         metadata.dna = parseInt(dna);
         metadata.name = name;
@@ -109,10 +102,8 @@ export default function kfactory() {
         metadata.mumId = 0;
         metadata.dadId = 0;
         metadata.generation = jsonObject.generation;
-        console.log(metadata)
 
         const pinataResponse = await pinJSONToIPFS(metadata);
-        console.log(pinataResponse)
         if (!pinataResponse.success) {
             return {
                 success: false,
@@ -120,14 +111,10 @@ export default function kfactory() {
             };
         }
         const tokenURI = pinataResponse.pinataUrl;
-        console.log(price)
         const txPrice = ethers.utils.parseUnits(price.toString(), 'ether')
-        console.log(txPrice)
         try {
             let transaction = await contract.createToken(tokenURI, txPrice, jsonObject.generation, { value: listPrice.toString() })
-            console.log(transaction)
             await transaction.wait()
-            console.log(transaction)
             setIsLoading(false)
             alert("Kitten created successfully!")
             return {
@@ -137,7 +124,7 @@ export default function kfactory() {
                     transaction.hash,
             };
         } catch (error) {
-            console.log(error)
+            console.error(error)
             setIsLoading(false)
             alert("Something went wrong, Please try again later")
             return {
@@ -153,7 +140,6 @@ export default function kfactory() {
             ...prevObject,
             [fieldName]: newValue
         }));
-        console.log(getDna())
     };
     const getDefault = () => {
         setJsonObject(defaultDNA);
@@ -166,7 +152,6 @@ export default function kfactory() {
     useEffect(() => {
         async function getLimit() {
             const provider = new ethers.providers.Web3Provider(window.ethereum);
-            console.log(window.ethereum)
             const signer = provider.getSigner();
             let contract = new ethers.Contract(contractAddress, Marketplace.abi, signer)
             const limit = await contract.getGenerationLimit()

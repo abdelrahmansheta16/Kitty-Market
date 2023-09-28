@@ -15,19 +15,16 @@ export default function mykitties() {
   const [isLoading, setIsloading] = useState(false);
   const { address, isConnected } = useAccount();
   const router = useRouter()
-  console.log(router)
   const fetchNFTs = async (pagekey) => {
     setIsloading(true)
     try {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       let contract = new ethers.Contract(contractAddress, Marketplace.abi, signer)
-      console.log(contract)
       const Nfts = await contract.getMyNFTs()
       //Fetch all the details of every NFT from the contract and display
       const items = await Promise.all(Nfts.map(async i => {
         var tokenURI = await contract.tokenURI(i.tokenId);
-        console.log("getting this tokenUri", tokenURI);
         tokenURI = GetIpfsUrlFromPinata(tokenURI);
         let meta = await axios.get(tokenURI);
         meta = meta.data;
@@ -43,13 +40,12 @@ export default function mykitties() {
         }
         return item;
       }))
-      console.log(items)
       updateFetched(true)
       if (items?.length) {
         setNfts(items);
       }
     } catch (e) {
-      console.log(e);
+      console.error(e);
       alert("Something went wrong, please try again later")
     }
 

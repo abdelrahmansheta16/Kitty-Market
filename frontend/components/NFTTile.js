@@ -3,7 +3,6 @@ import { Cat } from "./Cattributes/Cat";
 
 const NFTCard = ({ nftData }) => {
     const { tokenId, dna, price, name, seller } = nftData;
-    console.log(tokenId)
     return (
         <Link className="no-underline text-black" href="/NFTDetails/[nftId]" as={`/NFTDetails/${tokenId}`}>
             <div className="nft-card">

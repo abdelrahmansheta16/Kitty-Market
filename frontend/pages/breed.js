@@ -42,25 +42,18 @@ const App = () => {
         const signer = provider.getSigner();
         let contract = new ethers.Contract(contractAddress, Marketplace.abi, signer)
         var dadTokenURI = await contract.tokenURI(dameCat.tokenId);
-        console.log("getting this tokenUri", dadTokenURI);
         dadTokenURI = GetIpfsUrlFromPinata(dadTokenURI);
         let dadMeta = await axios.get(dadTokenURI);
         dadMeta = dadMeta.data;
-        console.log(dadMeta)
         var momTokenURI = await contract.tokenURI(sireCat.tokenId);
-        console.log("getting this tokenUri", momTokenURI);
         momTokenURI = GetIpfsUrlFromPinata(momTokenURI);
         let momMeta = await axios.get(momTokenURI);
         momMeta = momMeta.data;
-        console.log(momMeta)
         const newKitten = await contract.Breeding(dameCat.tokenId, sireCat.tokenId, dadMeta.dna, momMeta.dna, dadMeta.generation, momMeta.generation)
-        console.log(newKitten)
         let listingPrice = await contract.getListPrice()
-        console.log((parseInt(listingPrice.toString()) / Math.pow(10, 18)))
         listingPrice = parseInt(listingPrice.toString()) / Math.pow(10, 18)
         const listPrice = ethers.utils.parseUnits((listingPrice / parseInt(newKitten.generation.toString())).toFixed(6), 'ether')
-        //make metadata
-        console.log(listPrice.toString())
+            //make metadata
         const metadata = new Object();
         metadata.dna = parseInt(newKitten.genes.toString());
         metadata.name = name;
@@ -68,10 +61,8 @@ const App = () => {
         metadata.mumId = newKitten.mumId.toString();
         metadata.dadId = newKitten.dadId.toString();
         metadata.generation = newKitten.generation.toString();
-        console.log(metadata)
 
         const pinataResponse = await pinJSONToIPFS(metadata);
-        console.log(pinataResponse)
         if (!pinataResponse.success) {
             setIsLoading(false)
             alert("Something went wrong, please try again later")
@@ -81,14 +72,10 @@ const App = () => {
             };
         }
         const tokenURI = pinataResponse.pinataUrl;
-        console.log(price)
         const txPrice = ethers.utils.parseUnits(price.toString(), 'ether')
-        console.log(txPrice)
         try {
             let transaction = await contract.createToken(tokenURI, txPrice, parseInt(newKitten.generation.toString()), { value: listPrice.toString() })
-            console.log(transaction)
             await transaction.wait()
-            console.log(transaction)
             setIsLoading(false)
             alert("Kitten created successfully!")
             return {
