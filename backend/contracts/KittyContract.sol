@@ -216,9 +216,9 @@ contract KittyContract is
     function executeSale(uint256 tokenId) public payable {
         uint price = idToListedToken[tokenId].price;
         address seller = idToListedToken[tokenId].seller;
-        console.log("price: %d", price);
-        console.log("value: %d", msg.value);
-        console.log("value: %s", owner);
+        ("price: %d", price);
+        ("value: %d", msg.value);
+        ("value: %s", owner);
         require(
             msg.value == price,
             "Please submit the asking price in order to complete the purchase"

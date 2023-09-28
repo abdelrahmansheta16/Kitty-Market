@@ -61,7 +61,7 @@ contract KittyCore is Utils {
                 geneKid *= 100;
             }
         }
-        console.log("geneKid: %d", geneKid);
+        ("geneKid: %d", geneKid);
 
         uint256 kidGen = (dadGeneration < momGeneration)
             ? momGeneration + 1
@@ -71,7 +71,7 @@ contract KittyCore is Utils {
         if (kidGen > generationLimit) {
             kidGen = generationLimit;
         }
-        console.log("kidGen: %d", kidGen);
+        ("kidGen: %d", kidGen);
         return
             Kitty({
                 genes: geneKid,

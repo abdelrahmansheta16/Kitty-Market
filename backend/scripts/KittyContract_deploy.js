@@ -14,14 +14,11 @@ async function main() {
 		"https://gateway.pinata.cloud/ipfs/QmZy4cufXtNRfp6ZYVL51PVaj9FJC7cwMLnWj1AuZTH3NJ"
 	];
 
-	console.log(ipfsUrls);
 
 	const Contract = await hre.ethers.getContractFactory("KittyCore");
-	console.log(Contract)
 	const contract = await Contract.deploy(50, ipfsUrls);
 	await contract.waitForDeployment();
 	const contractAddress = await contract.getAddress();
-	console.log("KittyContract deployed to:", contractAddress);
 }
 
 main().catch((error) => {
